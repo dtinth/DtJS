@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Easing demo.</title>
+		<style type="text/css">
+			body {
+				font-size: 10pt;
+				background: #444;
+			}
+			.aa {
+				width: 7em;
+				height: 400px;
+				float: left;
+				position: relative;
+				margin-bottom: 2em;
+			}
+			.aa a {
+				color: #035;
+				text-decoration: none;
+				text-align: center;
+				display: block;
+				width: 6em;
+				height: 50px;
+				line-height: 50px;
+				background: #9ce;
+				border: 1px solid #7bd;
+				margin-top: 240px;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="lanes"></div>
+		<script type="text/javascript" src="dtjs.ob.js"></script>
+		<script type="text/javascript">
+
+			// Global - Container
+			var container = $('lanes');
+
+			// This function creates a new easing box.
+			function newEasingBox(text, value) {
+
+				// Create some elements.
+				var box = document.createElement('div');
+				box.className = 'aa';
+				var a = document.createElement('a');
+				a.href = 'javascript://dttvb.yi.org/';
+
+				// Declare animations.
+				var old_animation = false;
+
+				// Each frame.
+				function frame(val) {
+					var value = Math.round(val);
+					var fade  = val / 240;
+					if (fade < 0) fade = 0;
+					if (fade > 1) fade = 1;
+					a.style.background = dtjs.c.c(dtjs.c.f(dtjs.c.r([fade * 720, 100, 100]), [0x99, 0xcc, 0xee], fade));
+					a.style.marginTop  = value + 'px';
+				}
+
+				// On animation finished.
+				function finish(val) {
+					a.innerHTML = text;
+				}
+
+				// Create new animation on click.
+				a.onclick = function() {
+
+					// If any animation already started, stop it.
+					if (old_animation) old_animation.stop();
+
+					a.innerHTML = 'Running!';
+
+					// Make animation.
+					old_animation = dtjs.a(0, 240, 1.5, frame, finish, value);
+
+					return false;
+				};
+
+				// Lol
+				a.innerHTML = text;
+				container.appendChild (box);
+				box.appendChild (a);
+			}
+			newEasingBox ('null', null);
+			newEasingBox ('dtjs.a.i',  dtjs.a.i);
+			newEasingBox ('dtjs.a.o',  dtjs.a.o);
+			newEasingBox ('dtjs.a.io', dtjs.a.io);
+			newEasingBox ('dtjs.a.si',  dtjs.a.si);
+			newEasingBox ('dtjs.a.so',  dtjs.a.so);
+			newEasingBox ('dtjs.a.sio', dtjs.a.sio);
+			newEasingBox ('dtjs.a.e',    dtjs.a.e);
+			newEasingBox ('dtjs.a.b',    dtjs.a.b);
+			newEasingBox ('dtjs.a.ioe',  dtjs.a.ioe);
+		</script>
+	</body>
+</html>
