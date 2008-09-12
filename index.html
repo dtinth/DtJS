@@ -1,0 +1,412 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>DtJS &mdash; the JavaScript Animation Library</title>
+	<link rel="stylesheet" href="css.css" />
+</head>
+<body>
+<div style="text-align: center"><a href="/">Back to dttvb.yi.org</a></div>
+<h1>DtJS - The animation library!</h1>
+
+<p>You can download the current version here. It has only <code>main</code>, <code>animation</code> and <code>color</code> module.</p>
+
+<p>The selectors module is removed. However you can use <a href="http://dean.edwards.name/my/cssQuery/">cssQuery</a> instead.</p>
+
+<p>Effects and batch modules are also removed. So you need to make your animations manually.</p>
+
+<p><strong>Current Version: 0.5.4</strong> - Passed JSLint!</p>
+
+<ul>
+<li>8.7kb <a href="dtjs.js?0.5.4">Full Source code</a></li>
+<li>5.7kb <a href="dtjs.compressed.js?0.5.4">Compressed</a></li>
+<li>4.5kb <a href="dtjs.packed.js?0.5.4">Packed</a></li>
+<li><a href="Makefile">Makefile</a> <a href="minify.pl">minify.pl</a></li>
+</ul>
+
+<script type="text/javascript" src="dtjs.packed.js"></script>
+
+<p>The combined version contains the main, animation and color module.</p>
+
+<h2>Selecting elements...</h2>
+
+<p>You can use DtJS with any frameworks. If it does not use $, dtjs will make a function called $
+which will do what <code>document.getElementById</code> do.</p>
+
+<p>So, I have this code.</p>
+
+<pre><code>&lt;div id="hello"&gt;hello&lt;/div&gt;
+</code></pre>
+
+<p>To refer to this element you can do like this:</p>
+
+<pre><code>var helloDiv = $('hello');
+</code></pre>
+
+<p>Or you can select by tags. The function <code>$t</code> will select it by tags.</p>
+
+<pre><code>var helloDiv = $t('div')[0];
+</code></pre>
+
+<h2>Get Computed Style</h2>
+
+<p>New in 0.5.3, allows you to get computed style of an element.</p>
+
+<p>For example, you want to get the computed color of an element, that means, the color after applying classes, styles, and anything that affects the appearance.</p>
+
+<pre><code>var mylink = $('thelink');
+alert (dtjs.q(mylink).color);
+</code></pre>
+
+<p>And the following CSS:</p>
+
+<pre><code>#thelink:link {
+    color: #0000ff;
+}
+#thelink:visited {
+    color: #ff0000;
+}
+</code></pre>
+
+<p>The function will returns <code>rgb(0, 0, 255)</code> if the link is unvisited, <code>rgb(255, 0, 0)</code> otherwise.</p>
+
+<p>This function is very powerful if you want to animate the color of something. You can use it with dtjs.c.a.</p>
+
+<h2>XMLHttpRequest</h2>
+
+<p>To create an XMLHttpRequest object you can just do like this:</p>
+
+<pre><code>var xmlhttp = dtjs.xh();
+</code></pre>
+
+<p>You can then make requests like this:</p>
+
+<pre><code>function receive() {
+    if (xmlhttp.readyState != 4) return;
+    if (xmlhttp.status != 200) return;
+    var data = xmlhttp.responseText;
+    // Do whatever you want here.
+}
+dtjs.r (xmlhttp, 'GET', 'data.txt', '', receive);
+</code></pre>
+
+<p>The function <code>dtjs.r</code> takes 5 arguments:</p>
+
+<ul>
+<li><code>xmlhttp</code>  - The XMLHttpRequest object.</li>
+<li><code>method</code>   - 'GET' or 'POST'.</li>
+<li><code>url</code>      - URL of the file you want.</li>
+<li><code>postdata</code> - If you use POST you can put in the post data here just like this: <code>name1=val1&amp;name2=val2</code></li>
+<li><code>callback</code> - The function when the state changes.</li>
+</ul>
+
+<h2>Element Position Detection</h2>
+
+<p>If you want to know where an element is (from the top left corner of the document), the function <code>dtjs.l</code> and <code>dtjs.t</code>
+will do it.</p>
+
+<p>This is very useful for making an animation on some elements that you don't know what position they are.</p>
+
+<ul>
+<li><code>dtjs.l(element)</code> - Left position.</li>
+<li><code>dtjs.t(element)</code> - Top position.</li>
+</ul>
+
+<h2>Scrolling Position Detection</h2>
+
+<p>IE uses document.body.scrollTop and document.documentElement.scrollTop and mozilla uses window.pageYOffset.</p>
+
+<p>This function simplifies it and return an array containing the [X, Y] position.</p>
+
+<ul>
+<li><code>dtjs.sc()</code> - Returns the scrolling position in array.
+
+<ul>
+<li><strong>Return values</strong>
+
+<ul>
+<li><code>[0]</code> - Left (X)</li>
+<li><code>[1]</code> - Top (Y)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Viewport Size Detection</h2>
+
+<p>If you are making a program that fits the browser window, you can use this function.</p>
+
+<ul>
+<li><code>dtjs.sz()</code> - Returns the viewport size.
+
+<ul>
+<li><strong>Return values</strong>
+
+<ul>
+<li><code>[0]</code> - Width</li>
+<li><code>[1]</code> - Height</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Opacity</h2>
+
+<p>Sets an element's opacity.</p>
+
+<ul>
+<li><code>dtjs.o(element, opacity)</code> - Sets an element's opacity.
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>element</code> - The target element.</li>
+<li><code>opacity</code> - From 0 - 100</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Events Handling</h2>
+
+<p>You can add or remove events from an element like this:</p>
+
+<ul>
+<li><code>dtjs.ae(element, eventname, funct)</code> - Adds event from element.</li>
+<li><code>dtjs.re(element, eventname, funct)</code> - Removes event from element.
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>element</code> - The element you want.</li>
+<li><code>eventname</code> - Event name, click, mousedown, keyup, and so on.</li>
+<li><code>funct</code> - What to do when event fires.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h1>Animation Module</h1>
+
+<h2>Creating an Animation</h2>
+
+<p>In dtjs, you need to keep track of everything, but dtjs is able to create and stop animations.</p>
+
+<p>You specify the starting value, ending value, time, frame function, callback and easing function and dtjs will make an animation for you.</p>
+
+<p>To create an animation you do like this:</p>
+
+<pre><code>var oldanimation = false;
+function frame(value, finished) {
+    document.title = 'Value is ' + value;
+}
+function finished(value, finished) {
+    alert ('Finished!');
+}
+function makeanimation() {
+    if (oldanimation) oldanimation.stop ();
+    oldanimation = dtjs.a(0, 100, 2, frame, finished, null);
+}
+</code></pre>
+
+<ul>
+<li><code>dtjs.a</code> - Creates an animation.
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>start</code>    - Starting value.</li>
+<li><code>end</code>      - Ending value.</li>
+<li><code>duration</code> - Duration in seconds.</li>
+<li><code>frame</code>    - It will be called each frame, passing 2 arguments.
+
+<ul>
+<li><code>value</code>     - The current value.</li>
+<li><code>finished</code>  - True if the animation has finished on this frame. False otherwise.</li>
+</ul></li>
+<li><code>finished</code> - It will be called when animation finishes. It passes the same arguments as the frame function.</li>
+<li><code>easing</code>   - The easing function to use:
+
+<ul>
+<li><code>null</code>        - No easing, linear animation.</li>
+<li><code>dtjs.a.i</code>    - Starts smoothly.</li>
+<li><code>dtjs.a.o</code>    - Ends smoothly.</li>
+<li><code>dtjs.a.io</code>   - Starts and ends smoothly.</li>
+<li><code>dtjs.a.si</code>   - Starts smoothly (another algorithm).</li>
+<li><code>dtjs.a.so</code>   - Ends smoothly (another algorithm).</li>
+<li><code>dtjs.a.sio</code>  - Starts and ends smoothly (another algorithm).</li>
+<li><code>dtjs.a.e</code>    - Elastic effect. The value can go through ending value.</li>
+<li><code>dtjs.a.b</code>    - Bounce effect.</li>
+<li><code>dtjs.a.ioe</code>  - Smooth elastic effect.</li>
+</ul></li>
+</ul></li>
+<li><strong>Returns</strong>
+
+<ul>
+<li>An object with these members...
+
+<ul>
+<li><code>stop()</code>     - stops the current animation.</li>
+<li><code>getValue()</code> - get the current value of animation.</li>
+<li><code>isFinished()</code> - returns true if the animation has finished. false otherwise.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p><strong>Note:</strong> For 0.4.0 users must use the old function, <code>dtjs.a.c</code>. It still can be used.</p>
+
+<ul>
+<li><code>dtjs.a.c</code> - Creates an animation.
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>start</code>    - Starting value.</li>
+<li><code>end</code>      - Ending value.</li>
+<li><code>duration</code> - Duration in seconds.</li>
+<li><code>frame</code>    - It will be called each frame, passing 2 arguments.
+
+<ul>
+<li><code>value</code>     - The current value.</li>
+<li><code>finished</code>  - True if the animation has finished on this frame. False otherwise.</li>
+</ul></li>
+<li><code>easing</code>   - The easing function to use:
+
+<ul>
+<li>See above.</li>
+</ul></li>
+</ul></li>
+<li><strong>Returns</strong>
+
+<ul>
+<li>A function that can be called <em>without any arguments</em> to stop the animation.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p><a href="easingtest.html"><strong>See the easing demo</strong></a>.</p>
+
+<h1>Color Module</h1>
+
+<p>The color module can be used to make color effects.</p>
+
+<h2>Convert Color Code to Array</h2>
+
+<p>Mosts functions needs an array of color code to be passed into.</p>
+
+<ul>
+<li><code>dtjs.c.a(colorcode)</code>
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>colorcode</code> - Color code. Color names aren't supported. There are 2 accepted forms:
+
+<ul>
+<li><code>#000000</code></li>
+<li><code>rgb(0, 0, 0)</code></li>
+</ul></li>
+</ul></li>
+<li><strong>Return Value</strong>
+
+<ul>
+<li>Array of red, green, blue values.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Convert HSV to RGB</h2>
+
+<p>You can implement a rainbow by using this function.</p>
+
+<ul>
+<li><code>dtjs.c.r(arrayhsv)</code>
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>arrayhsv</code> - Array of hue, saturation and values.</li>
+</ul></li>
+<li><strong>Return Value</strong>
+
+<ul>
+<li>Array of red, green, blue values.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>You can convert RGB back to HSV.</p>
+
+<ul>
+<li><code>dtjs.c.h(arrayrgb)</code>
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>arrayrgb</code> - Array of hue, saturation and values.</li>
+</ul></li>
+<li><strong>Return Value</strong>
+
+<ul>
+<li>Array of red, green, blue values.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Fadeing Between Colors</h2>
+
+<p>You can use <code>dtjs.c.f</code> function. It can be used with <code>dtjs.a.c</code> when you want to make color fadin.</p>
+
+<ul>
+<li><code>dtjs.c.f(array1, array2, fade)</code>
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li><code>array1</code> - Array of starting color.</li>
+<li><code>array2</code> - Array of ending color.</li>
+<li><code>fade</code>   - Fading position from 0 to 1.</li>
+</ul></li>
+<li><strong>Return Value</strong>
+
+<ul>
+<li>Array of computed values.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Converting the Color Array Back to Color Code.</h2>
+
+<p>for using with CSS.</p>
+
+<ul>
+<li><code>dtjs.c.c(arrayrgb)</code>
+
+<ul>
+<li><strong>Arguments</strong>
+
+<ul>
+<li>Array of red, green, blue values</li>
+</ul></li>
+<li><strong>Return Value</strong>
+
+<ul>
+<li>The color code, rounded.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>For example</p>
+
+<pre><code>dtjs.c.c(dtjs.c.f(dtjs.c.a('#ff0000'), dtjs.c.a('#0000ff'), 0.5))
+</code></pre>
+
+<p>Would return the color code between red and blue color.</p>
+
+<p><a href="/">See my home page</a> for a combined examples.</p>
+</body>
+</html>
